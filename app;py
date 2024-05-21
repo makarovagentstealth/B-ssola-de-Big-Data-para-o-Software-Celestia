@@ -1,0 +1,42 @@
+import json
+import socket
+from flask import Flask, request, jsonify
+from flask_cors import CORS
+from threading import Thread
+from bussola import Bussola
+
+app = Flask(__name__)
+CORS(app)
+bussola = Bussola()
+data_buffer = []
+
+def tcp_listener():
+    global data_buffer
+    server_socket = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+    server_socket.bind(('localhost', 9000))
+    server_socket.listen(5)
+    print("Listening on port 9000...")
+    while True:
+        client_socket, addr = server_socket.accept()
+        print(f"Connection from {addr} has been established!")
+        while True:
+            data = client_socket.recv(1024)
+            if not data:
+                break
+            data_buffer.append(json.loads(data.decode('utf-8')))
+        client_socket.close()
+
+@app.route('/analisar', methods=['POST'])
+def analisar():
+    global data_buffer
+    if data_buffer:
+        dados = data_buffer.pop(0)
+        resposta = bussola.analisar_dados(dados)
+        return jsonify(resposta)
+    else:
+        return jsonify({"error": "No data received"}), 400
+
+if __name__ == '__main__':
+    listener_thread = Thread(target=tcp_listener)
+    listener_thread.start()
+    app.run(port=8000)

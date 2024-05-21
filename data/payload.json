@@ -1,0 +1,13 @@
+{
+    "coordenadas": [
+        {"frequencia_potassio": 0.6, "x": 206.796, "y": -62.5779},
+        {"frequencia_potassio": 0.45, "x": 207, "y": -62.6}
+    ],
+    "detridos": [
+        {"amplitude": 2.1, "frequencia_base": 0.75, "periodo": 12},
+        {"amplitude": 1.8, "frequencia_base": 1.0, "periodo": 6}
+    ],
+    "massa": 3.978e31,
+    "raio": 912357,
+    "constante_gravitacional": 6.67430e-11
+}
